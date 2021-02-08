@@ -40,11 +40,10 @@ elif ("chat" in choice or int(choice) == 1):
         t1 = th.Thread( target=nsuf.recvmsg )
         t1.start()
 
-#        message = input("Enter your Message: ")
-#        t2 = th.Thread( target=nsuf.sendMessage(rip=receiverIP,rport=receiverPort,msg=message) )
-#        t2.start()
-        t2 = th.Thread( target=nsuf.sendMessageInGroup )
+        message = input("Enter your Message: ")
+        t2 = th.Thread( target=nsuf.sendMessage(rip=receiverIP,rport=receiverPort,msg=message) )
         t2.start()
+
 
 #        cntnue = True
 #        cntnue = input("Press ENTER to continue or type exit to Quit: ")
