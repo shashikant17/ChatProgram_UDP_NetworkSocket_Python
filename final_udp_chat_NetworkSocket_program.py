@@ -1,5 +1,6 @@
 import socket
 import threading as th
+import os
 
 
 def updateIpPort(ip,port,lst):
@@ -68,47 +69,52 @@ def todo():
 
 choice = todo()
 
+while choice is not "exit":
 
-if ("exit" in choice or "quit" in choice):
-    print("\n\t\t\t\t\tBye!!!")
-    exit()
+    if ("exit" in choice or "quit" in choice):
+        print("\n\t\t\t\t\tBye!!!")
+        os._exit(1)
 
-elif ("chat" in choice or int(choice) == 1 or "personal" in choice ):
-    print("\n\t\t\tYou choose to chat personaly")
-    receiverIP = str(input("\nEnter Receiver IP Address: "))
-    receiverPort = int(input("Enter Receiver Port number: "))
-    time = True
-    while time:
-        t1 = th.Thread( target=recvmsg )
-        t1.start()
+    elif ("chat" in choice or int(choice) == 1 or "personal" in choice ):
+        print("\n\t\t\tYou choose to chat personaly")
+        receiverIP = str(input("\nEnter Receiver IP Address: "))
+        receiverPort = int(input("Enter Receiver Port number: "))
+        time = True
+        while time:
+            stopThread = False
+            t1 = th.Thread( target=recvmsg, daemon = True )
+            t1.start()
 
-        message = input("\nEnter your Message: ")
-        sendMessage(rip=receiverIP,rport=receiverPort,msg=message)
+            message = input("\nEnter your Message: ")
+            sendMessage(rip=receiverIP,rport=receiverPort,msg=message)
 
-        cntnue = True
-        cntnue = input("\t\t\tPress ENTER to continue or type exit to Quit: ")
-        if (("exit" or "quit") in cntnue):
-            stopThread = True
-            time = False
-            choice = todo()
+            cntnue = True
+            cntnue = input("\t\t\tPress ENTER to continue or type exit to Quit: ")
+            if (("exit" or "quit") in cntnue):
+                stopThread = True
+                time = False
+                lst = []
+                choice = todo()
 
-elif ( "multiple" in choice or int(choice) == 2 ):
-    print("\n\t\t\tYou choose to chat with Multi System")
-    receiverIP = str(input("\nEnter Receiver IP Address: "))
-    receiverPort = int(input("Enter Receiver Port number: "))
-    lst.append({"IP":receiverIP,"PORT":receiverPort})
-    time = True
-    while time:
-        stopThread = False
-        t2 = th.Thread( target=recvmsg )
-        t2.start()
 
-        message = input("\nEnter your Message: ")
-        sendMessageInGroup(message,lst)
+    elif ( "multiple" in choice or int(choice) == 2 ):
+        print("\n\t\t\tYou choose to chat with Multi System")
+        receiverIP = str(input("\nEnter Receiver IP Address: "))
+        receiverPort = int(input("Enter Receiver Port number: "))
+        lst.append({"IP":receiverIP,"PORT":receiverPort})
+        time = True
+        while time:
+            stopThread = False
+            t2 = th.Thread( target=recvmsg , daemon = True )
+            t2.start()
 
-        cntnue = True
-        cntnue = input("\t\t\tPress ENTER to continue or type exit to Quit: ")
-        if (("exit" or "quit") in cntnue):
-            stopThread = True
-            time = False
-            choice = todo()
+            message = input("\nEnter your Message: ")
+            sendMessageInGroup(message,lst)
+
+            cntnue = True
+            cntnue = input("\t\t\tPress ENTER to continue or type exit to Quit: ")
+            if (("exit" or "quit") in cntnue):
+                stopThread = True
+                time = False
+                lst = []
+                choice = todo()
